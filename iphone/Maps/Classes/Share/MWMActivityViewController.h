@@ -8,6 +8,10 @@ NS_SWIFT_NAME(ActivityViewController)
 
 + (nullable instancetype)shareControllerForEditorViral;
 
++ (NSURL *)saveGPXFile;
+
++ (BOOL) isGPSTrackerEnabled;
+
 + (nullable instancetype)shareControllerForMyPosition:(CLLocationCoordinate2D)location;
 
 + (nullable instancetype)shareControllerForPlacePage:(PlacePageData *)data;

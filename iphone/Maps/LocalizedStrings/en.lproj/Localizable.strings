@@ -210,6 +210,10 @@
 
 "share_my_location" = "Share My Location";
 
+"share_recent_track" = "Share Recent Track";
+
+"enable_recent_track" = "You must first enable recent track, open Settings > Share Recent Track.";
+
 "prefs_group_route" = "Navigation";
 
 "pref_zoom_title" = "Zoom buttons";

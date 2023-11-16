@@ -1,9 +1,22 @@
 #include "map/gps_track.hpp"
 
+#include "platform/platform.hpp"
+
 #include "base/assert.hpp"
 #include "base/logging.hpp"
+#include "base/file_name_utils.hpp"
+#include "base/timer.hpp"
+
+#include <ctime>
+#include <iomanip>
+#include <iostream>
+
+#include "pugixml.hpp"
 
 #include <algorithm>
+
+#include <stdio.h>
+#include <sys/time.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -163,6 +176,38 @@ void GpsTrack::InitStorageIfNeed()
   {
     LOG(LWARNING, ("Track storage creation error:", e.Msg()));
   }
+}
+
+std::string GpsTrack::GetUnpackedTrack() {
+    const std::string path = base::JoinPath(GetPlatform().WritableDir(), GPS_TRACK_GPX_FILENAME);
+    pugi::xml_document doc;
+    pugi::xml_node node = doc.append_child("gpx");
+    node.append_attribute("version") = "1.1";
+    
+    pugi::xml_node trk = node.append_child("trk");
+    
+    pugi::xml_node trkName = trk.append_child("name");
+    trkName.append_child(pugi::node_pcdata).set_value("Organic Map Recent Track");
+    
+    pugi::xml_node trkseg = trk.append_child("trkseg");
+    
+    vector<location::GpsInfo> originPoints;
+    originPoints.reserve(gps_track::kItemBlockSize);
+    
+    m_storage->ForEach([this, &originPoints, &trkseg](location::GpsInfo const & originPoint)->bool
+    {
+        pugi::xml_node trkpt = trkseg.append_child("trkpt");
+        trkpt.append_attribute("lat") = originPoint.m_latitude;
+        trkpt.append_attribute("lon") = originPoint.m_longitude;
+        pugi::xml_node trkptTime = trkpt.append_child("time");
+        std::string trkptTimeValue = base::TimestampToString(originPoint.m_timestamp);
+        trkptTime.append_child(pugi::node_pcdata).set_value(trkptTimeValue.c_str());
+        return true;
+    });
+    
+    doc.save_file(path.c_str());
+    
+    return path;
 }
 
 void GpsTrack::InitCollection(hours duration)

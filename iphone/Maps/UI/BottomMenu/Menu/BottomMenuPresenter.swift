@@ -9,6 +9,7 @@ class BottomMenuPresenter: NSObject {
     case donate
     case settings
     case share
+    case shareRecentTrack
   }
   enum Sections: Int {
     case layers
@@ -85,6 +86,11 @@ extension BottomMenuPresenter {
                      title: L("share_my_location"),
                      badgeCount: 0,
                      enabled: true)
+    case .shareRecentTrack:
+      cell.configure(imageName: "ic_menu_point_to_point",
+                     title: L("share_recent_track"),
+                     badgeCount: 0,
+                     enabled: true)
     }
     return cell
   }
@@ -111,6 +117,10 @@ extension BottomMenuPresenter {
     case .share:
       if let cell = tableView.cellForRow(at: indexPath) as? BottomMenuItemCell {
         interactor.shareLocation(cell: cell)
+      }
+    case .shareRecentTrack:
+      if let cell = tableView.cellForRow(at: indexPath) as? BottomMenuItemCell {
+        interactor.shareRecentTrack(cell: cell)
       }
     }
   }

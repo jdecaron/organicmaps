@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -37,6 +38,8 @@ public:
   /// Clears any previous tracking info
   /// @note Callback is called with 'toRemove' points, if some points were removed.
   void Clear();
+    
+  std::string GetUnpackedTrack();
 
   /// Sets tracking duration in hours.
   /// @note Callback is called with 'toRemove' points, if some points were removed.
@@ -79,6 +82,7 @@ private:
 
   size_t const m_maxItemCount;
   std::string const m_filePath;
+  std::fstream m_trackStream;
 
   mutable std::mutex m_dataGuard;           // protects data for stealing
   std::vector<location::GpsInfo> m_points;  // accumulated points for adding

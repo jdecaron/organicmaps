@@ -84,6 +84,7 @@
 #define PACKED_POLYGONS_FILE "packed_polygons.bin"
 
 #define GPS_TRACK_FILENAME "gps_track.dat"
+#define GPS_TRACK_GPX_FILENAME "gps_track.gpx"
 #define RESTRICTIONS_FILENAME "restrictions.csv"
 #define ROAD_ACCESS_FILENAME "road_access.csv"
 #define ROAD_ACCESS_CONDITIONAL_EXT ".access_conditional"

@@ -111,3 +111,8 @@ void GpsTracker::OnLocationUpdated(location::GpsInfo const & info)
     return;
   m_track.AddPoint(info);
 }
+
+std::string GpsTracker::SaveGPXFile()
+{
+  return m_track.GetUnpackedTrack();
+}

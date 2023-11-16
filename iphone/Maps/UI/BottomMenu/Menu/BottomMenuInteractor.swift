@@ -5,12 +5,14 @@ protocol BottomMenuInteractorProtocol: AnyObject {
   func donate()
   func openSettings()
   func shareLocation(cell: BottomMenuItemCell)
+  func shareRecentTrack(cell: BottomMenuItemCell)
 }
 
 @objc protocol BottomMenuDelegate {
   func actionDownloadMaps(_ mode: MWMMapDownloaderMode)
   func addPlace()
   func didFinishAddingPlace()
+  func shareRecentTrack()
 }
 
 class BottomMenuInteractor {
@@ -73,5 +75,20 @@ extension BottomMenuInteractor: BottomMenuInteractorProtocol {
     guard let viewController = viewController else { return }
     let vc = ActivityViewController.share(forMyPosition: coordinates)
     vc?.present(inParentViewController: viewController, anchorView: cell.anchorView)
+  }
+  
+  func shareRecentTrack(cell: BottomMenuItemCell) {
+    if (ActivityViewController.isGPSTrackerEnabled()) {
+      let url = ActivityViewController.saveGPXFile()
+      
+      guard let viewController = viewController else { return }
+      let vc = ActivityViewController.share(for: url, message: L("share_bookmarks_email_body"));
+      
+      vc?.present(inParentViewController: viewController, anchorView: cell.anchorView)
+    } else {
+      let alert = UIAlertController(title: L("enable_recent_track"), message: nil, preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: L("ok"), style: .default, handler: nil))
+      viewController?.present(alert, animated: true, completion: nil)
+    }
   }
 }

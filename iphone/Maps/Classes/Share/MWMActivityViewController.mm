@@ -2,6 +2,8 @@
 #import "MWMEditorViralActivityItem.h"
 #import "MWMShareActivityItem.h"
 
+#include "map/gps_tracker.hpp"
+
 @interface MWMActivityViewController ()
 
 @property(weak, nonatomic) UIViewController *ownerViewController;
@@ -23,6 +25,19 @@
       UIActivityTypeAddToReadingList, UIActivityTypePostToFlickr, UIActivityTypePostToVimeo
     ];
   return self;
+}
+
++ (NSURL *)saveGPXFile {
+  NSString *path = [NSString stringWithCString:GpsTracker::Instance().SaveGPXFile().c_str() encoding:[NSString defaultCStringEncoding]];
+  NSString *URLString = [NSString stringWithFormat:@"file://%@", path];
+
+  return [NSURL URLWithString:URLString];
+}
+
++ (BOOL) isGPSTrackerEnabled {
+  if (GpsTracker::Instance().IsEnabled())
+    return true;
+  return false;
 }
 
 + (instancetype)shareControllerForMyPosition:(CLLocationCoordinate2D)location {
