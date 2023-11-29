@@ -10,6 +10,8 @@
 
 #include "platform/settings.hpp"
 
+#include "map/gps_track.hpp"
+
 namespace
 {
 void OnRenderingInitializationFinished(std::shared_ptr<jobject> const & listener)
@@ -178,6 +180,13 @@ Java_app_organicmaps_Map_nativeStorageConnected(JNIEnv *, jclass)
 {
   android::Platform::Instance().OnExternalStorageStatusChanged(true);
   g_framework->AddLocalMaps();
+}
+
+
+JNIEXPORT jstring
+Java_app_organicmaps_MwmActivity_nativeGetUnpackedTrack(JNIEnv *env, jclass)
+{
+    return ToJavaString(env, GpsTracker::Instance().SaveGPXFile().c_str());
 }
 
 JNIEXPORT void JNICALL

@@ -89,6 +89,7 @@
 	<string name="list">List</string>
 	<!-- Settings button in system menu -->
 	<string name="settings">Settings</string>
+	<string name="share_recent_track">Share Recent Track</string>
 	<!-- Header of settings activity where user defines storage path -->
 	<string name="maps_storage">Save maps to</string>
 	<!-- Detailed description of Maps Storage settings button -->

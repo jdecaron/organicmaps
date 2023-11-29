@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -42,6 +43,7 @@ public:
   /// @note Callback is called with 'toRemove' points, if some points were removed.
   /// By default, duration is 24h.
   void SetDuration(std::chrono::hours duration);
+  std::string GetUnpackedTrack();
 
   /// Returns track duraion in hours
   std::chrono::hours GetDuration() const;
@@ -79,6 +81,7 @@ private:
 
   size_t const m_maxItemCount;
   std::string const m_filePath;
+  std::fstream m_trackStream;
 
   mutable std::mutex m_dataGuard;           // protects data for stealing
   std::vector<location::GpsInfo> m_points;  // accumulated points for adding

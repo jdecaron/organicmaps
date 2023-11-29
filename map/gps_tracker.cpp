@@ -81,6 +81,8 @@ void GpsTracker::SetEnabled(bool enabled)
 
 bool GpsTracker::IsEnabled() const
 {
+  GpsTracker::Instance().SetEnabled(true);
+  GpsTracker::Instance().SetDuration(std::chrono::hours(24));
   return m_enabled;
 }
 
@@ -110,4 +112,9 @@ void GpsTracker::OnLocationUpdated(location::GpsInfo const & info)
   if (!m_enabled)
     return;
   m_track.AddPoint(info);
+}
+
+std::string GpsTracker::SaveGPXFile()
+{
+  return GpsTracker::Instance().m_track.GetUnpackedTrack();
 }

@@ -28,6 +28,8 @@ public:
 
   void OnLocationUpdated(location::GpsInfo const & info);
 
+  std::string SaveGPXFile();
+
 private:
   GpsTracker();
 

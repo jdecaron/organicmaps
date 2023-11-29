@@ -75,6 +75,7 @@ import app.organicmaps.maplayer.ToggleMapLayerFragment;
 import app.organicmaps.maplayer.isolines.IsolinesManager;
 import app.organicmaps.maplayer.isolines.IsolinesState;
 import app.organicmaps.maplayer.subway.SubwayManager;
+import app.organicmaps.MwmApplication;
 import app.organicmaps.routing.NavigationController;
 import app.organicmaps.routing.NavigationService;
 import app.organicmaps.routing.RoutePointInfo;
@@ -95,6 +96,7 @@ import app.organicmaps.settings.UnitLocale;
 import app.organicmaps.util.Config;
 import app.organicmaps.util.LocationUtils;
 import app.organicmaps.util.SharingUtils;
+import app.organicmaps.util.StorageUtils;
 import app.organicmaps.util.ThemeSwitcher;
 import app.organicmaps.util.ThemeUtils;
 import app.organicmaps.util.UiUtils;
@@ -2115,6 +2117,31 @@ public class MwmActivity extends BaseMwmFragmentActivity
     shareMyLocation();
   }
 
+  public void onExportRecentTrack()
+  {
+    closeFloatingPanels();
+    exportRecentTrack();
+  }
+
+  public native String nativeGetUnpackedTrack();
+
+  private void exportRecentTrack() {
+    String path = nativeGetUnpackedTrack();
+    Context context = getApplicationContext();
+    Intent intent = new Intent(Intent.ACTION_SEND);
+
+    intent.putExtra(Intent.EXTRA_SUBJECT, "gps_track.gpx");
+    intent.putExtra(Intent.EXTRA_TEXT, "Exported recent track GPX file from Organic Maps.");
+
+    final Uri fileUri = StorageUtils.getUriForFilePath(context, path);
+    intent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri);
+    intent.setDataAndType(fileUri, "application/gpx+xml");
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+    Intent chooser = Intent.createChooser(intent, context.getString(R.string.share));
+    startActivity(chooser);
+  }
+
   public void onLayerChange(Mode mode)
   {
     if (mPreviousLayerMode != mode)
@@ -2141,6 +2168,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
         items.add(new MenuBottomSheetItem(R.string.donate, R.drawable.ic_donate, this::onDonateOptionSelected));
       items.add(new MenuBottomSheetItem(R.string.settings, R.drawable.ic_settings, this::onSettingsOptionSelected));
       items.add(new MenuBottomSheetItem(R.string.share_my_location, R.drawable.ic_share, this::onShareLocationOptionSelected));
+      items.add(new MenuBottomSheetItem(R.string.share_recent_track, R.drawable.ic_download, this::onExportRecentTrack));
       return items;
     }
     return null;
